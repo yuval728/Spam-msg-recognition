@@ -6,13 +6,15 @@ def load_model():
         spam_model = pickle.load(f)
     return spam_model
 
-def predict(message, model=load_model()):
-    spam_model = model
+def predict(message, spam_model):
     prediction = spam_model.predict([message])[0]
-    return 'Spam' if prediction == 1 else 'Not Spam'
+    prediction = "Spam" if prediction == 1 else "Not Spam"
+    prediction_proba = spam_model.predict_proba([message])[0]
+    return prediction, prediction_proba
 
 if __name__ == '__main__':
-    model=load_model()
+    spam_model = load_model()
     message = input('Enter a message: ')
-    print(predict(message, model))
+    prediction, prediction_proba = predict(message, spam_model)
+    print(f'Message is: {prediction} with probability {prediction_proba.max() * 100:.2f}')
     
